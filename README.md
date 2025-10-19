@@ -32,6 +32,15 @@ You can build the lists as you want them, there are now limits as long as the fi
 
 ![config](./screenshots/config.jpg)
 
+## Window Management
+
+### Locking Windows
+To prevent accidental movement of scanner windows, you can lock them using:
+- `/scan lock` - Locks all scanner windows (prevents moving)
+- `/scan unlock` - Unlocks all scanner windows (allows moving)
+
+Lock state is preserved between game sessions, so your windows will remain locked or unlocked after relogging.
+
 # Filters
 
 <img src="./screenshots/infight.jpg" float="right" align="right">
