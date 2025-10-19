@@ -7,6 +7,32 @@ local settings = {}
 SLASH_SHAGUSCAN1, SLASH_SHAGUSCAN2, SLASH_SHAGUSCAN3 = "/scan", "/sscan", "/shaguscan"
 
 SlashCmdList["SHAGUSCAN"] = function(input)
+  if input == "lock" then
+    -- Lock all windows
+    for caption, config in pairs(ShaguScan_db.config) do
+      config.locked = true
+    end
+    -- Apply lock to current frames
+    for caption, root in pairs(ShaguScan.ui.frames) do
+      root:SetMovable(false)
+      root:RegisterForDrag("")
+    end
+    DEFAULT_CHAT_FRAME:AddMessage("ShaguScan: All windows locked")
+    return
+  elseif input == "unlock" then
+    -- Unlock all windows
+    for caption, config in pairs(ShaguScan_db.config) do
+      config.locked = false
+    end
+    -- Apply unlock to current frames
+    for caption, root in pairs(ShaguScan.ui.frames) do
+      root:SetMovable(true)
+      root:RegisterForDrag("LeftButton")
+    end
+    DEFAULT_CHAT_FRAME:AddMessage("ShaguScan: All windows unlocked")
+    return
+  end
+  
   local caption = input and input ~= '' and input or "Scanner"
   settings.OpenConfig(caption)
 end
@@ -82,7 +108,8 @@ settings.OpenConfig = function(caption)
   if not ShaguScan_db.config[caption] then
     ShaguScan_db.config[caption] = {
       filter = "npc,infight,alive",
-      scale = 1, anchor = "CENTER", x = 0, y = 0, width = 75, height = 12, spacing = 4, maxrow = 20
+      scale = 1, anchor = "CENTER", x = 0, y = 0, width = 75, height = 12, spacing = 4, maxrow = 20,
+      locked = false
     }
   end
 
@@ -144,6 +171,7 @@ settings.OpenConfig = function(caption)
       scale = tonumber(scale) or config.scale,
       x = tonumber(x) or config.x,
       y = tonumber(y) or config.y,
+      locked = config.locked or false,
     }
 
     ShaguScan_db.config[caption] = nil
