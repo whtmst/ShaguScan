@@ -24,11 +24,24 @@ ui.CreateRoot = function(parent, caption)
   local frame = CreateFrame("Frame", "ShaguScan"..caption, parent)
   frame.id = caption
 
+  -- Load lock setting from config
+  local config = ShaguScan_db.config[caption]
+  local isLocked = config and config.locked or false
+
   frame:EnableMouse(true)
-  frame:RegisterForDrag("LeftButton")
-  frame:SetMovable(true)
+  if isLocked then
+    frame:RegisterForDrag("")
+    frame:SetMovable(false)
+  else
+    frame:RegisterForDrag("LeftButton")
+    frame:SetMovable(true)
+  end
 
   frame:SetScript("OnDragStart", function()
+    -- Check if window is locked via config
+    local config = ShaguScan_db.config[this.id]
+    if config and config.locked then return end
+    
     this.lock = true
     this:StartMoving()
   end)
